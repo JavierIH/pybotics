@@ -25,20 +25,20 @@ class PWM(object):
         self._read("enable")
     
     @property
-    def period(self)
+    def period(self):
         return self._read("period")
 
     @period.setter
-    def period(self, period)
+    def period(self, period):
         if self.duty_cycle >= period:
             self._write("period", period)
 
     @property
-    def duty_cycle(self)
+    def duty_cycle(self):
         return self._read("duty_cycle")
 
     @duty_cycle.setter
-    def duty_cycle(self, period)
+    def duty_cycle(self, period):
         self._write("duty_cycle", period)
 
 
