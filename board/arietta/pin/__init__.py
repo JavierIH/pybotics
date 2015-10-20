@@ -1,0 +1,2 @@
+class PinException(Exception):
+    pass

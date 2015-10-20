@@ -5,12 +5,12 @@ class PWM(object):
     def __init__(self, port, period=0, duty_cycle=0):
         
         self.port = port
-        self.path = "/sys/class/pwm/pwmchip0/pwm%s" self.port
-        if not os.path.exist("/sys/class/pwm/pwmchip0/pwm%s" % port):
-           os.system("echo %s > /sys/class/pwm/pwmchip0/export" % port)
-        self.enable = 1
+        self.path = "/sys/class/pwm/pwmchip0/pwm%s" % self.port
+        if not os.path.exists("/sys/class/pwm/pwmchip0/pwm%s" % port):
+            os.system("echo %s > /sys/class/pwm/pwmchip0/export" % port)
         self.period = period
-        self.duty_cycle = dutycicle
+        self.duty_cycle = duty_cycle
+        self.enable = 1
 
     @property
     def enable(self):
@@ -43,13 +43,9 @@ class PWM(object):
 
 
     def _read(self, data):
-        value = ""
-        file os.path.join(self.path, data)
-        with open(file, 'r') as f:
-            value = f.read()
-        return value
+        with open(os.path.join(self.path, data), 'r') as f:
+            return f.read()
 
     def _write(self, data, value):
-        file = os.path.join(self.path, data)
-        with open(file, 'r+') as f:
+        with open(os.path.join(self.path, data), 'r+') as f:
             f.write(value)
