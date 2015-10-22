@@ -1,9 +1,10 @@
 import os
 
+
 class PWM(object):
 
     def __init__(self, port, period=5000000, duty_cycle=0):
-        
+
         self.port = port
         self.path = "/sys/class/pwm/pwmchip0/pwm%s" % self.port
         if not os.path.exists("/sys/class/pwm/pwmchip0/pwm%s" % port):
@@ -23,7 +24,7 @@ class PWM(object):
     @property
     def status(self):
         self._read("enable")
-    
+
     @property
     def period(self):
         return self._read("period")
@@ -40,7 +41,6 @@ class PWM(object):
     @duty_cycle.setter
     def duty_cycle(self, period):
         self._write("duty_cycle", period)
-
 
     def _read(self, data):
         with open(os.path.join(self.path, data), 'r') as f:
