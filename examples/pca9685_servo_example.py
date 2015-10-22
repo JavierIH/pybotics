@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__).replace('examples','')))
+sys.path.append(os.path.dirname(os.path.abspath(__file__).replace('examples', '')))
 
 import smbus
 from driver.pca9685.pca9685 import ServoController

@@ -30,7 +30,7 @@ class ServoController(object):
         register_value = self._read(id)
         pulse_width = (register_value*1000000) / (self._update_rate*4095)
         present_position = ((pulse_width-self.servo_zero)/self.servo_inc-self.servos[id].trim) * (-2*self.servos[id].reverse+1)
-        
+
         return present_position
 
     def setFrequency(self, update_rate):
@@ -64,6 +64,7 @@ class ServoController(object):
             self.servos[id] = Servo(id, trim)
         else:
             raise ValueError('Invalid ID')
+
 
 class Servo(object):
 
