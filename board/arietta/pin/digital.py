@@ -40,18 +40,22 @@ class Digital(object):
         self.id = pin_map[self.pin]['id']
         self.name = pin_map[self.pin]['name']
         self.path = '/sys/class/gpio/%s/value' % self.name
-        if mode in ['in, out']:
+        if mode in ['in', 'out']:
             os.system('echo %s > /sys/class/gpio/%s/direction' % (mode, self.name))
-            self.mode = mode
+            self._mode = mode
         else:
             raise PinException()
+
+    @property
+    def mode(self):
+        return self._mode
 
     @mode.setter
     def mode(self, mode):
         if not self.mode == mode:
-            if mode in ['in, out']:
+            if mode in ['in', 'out']:
                 os.system('echo %s > /sys/class/gpio/%s/direction' % (mode, self.name))
-                self.mode = mode
+                self._mode = mode
             else:
                 raise PinException()
 

@@ -48,4 +48,4 @@ class PWM(object):
 
     def _write(self, data, value):
         with open(os.path.join(self.path, data), 'r+') as f:
-            f.write(value)
+            f.write(str(value))
