@@ -1,32 +1,47 @@
 class ServoController(object):
 
-    def __init__(self, bus, address, servo_min=150, servo_max=550, servo_amp=180):
+    def __init__(self, bus, address, servo_min=1500, servo_max=2000, servo_amp=180):
+
+        self._osc_clock = 25000000
+        self._update_rate = 60
 
         self.address = address
         self.servo_min = servo_min
-        self.servo_inc = (servo_max-servo_min)/servo_amp
+        self.servo_inc = float(servo_max-servo_min)/servo_amp
         self.servo_max = servo_max
-        self.servo_zero = (servo_max+servo_min)/2
+        self.servo_zero = float(servo_max+servo_min)/2
         self.bus = bus
         self.servos = {}
 
         # configuration
-        self.bus.write_byte_data(self.address, 0x00, 0x10)
-        self.bus.write_byte_data(self.address, 0xfe, 0x64)
-        self.bus.write_byte_data(self.address, 0x00, 0x00)
+        self.setFrequency(self._update_rate)
 
     def move(self, id, target_position):
 
         trim = self.servos[id].trim
         target_position = target_position * (-2*self.servos[id].reverse + 1)
-        register_value = int(self.servo_zero+(target_position+trim)*self.servo_inc)
+        pulse_width = self.servo_zero + (target_position+trim) * self.servo_inc
+        register_value = int(pulse_width * self._update_rate * 4095 / 1000000)
         self._write(id, register_value)
         self.servos[id].current_position = target_position
 
     def getPosition(self, id):
 
         register_value = self._read(id)
-        return ((register_value - self.servo_zero)/self.servo_inc - self.servos[id].trim) * (-2*self.servos[id].reverse + 1)
+        pulse_width = (register_value*1000000) / (self._update_rate*4095)
+        present_position = ((pulse_width-self.servo_zero)/self.servo_inc-self.servos[id].trim) * (-2*self.servos[id].reverse+1)
+        
+        return present_position
+
+    def setFrequency(self, update_rate):
+
+        self._update_rate = update_rate
+
+        prescale_value = round(self._osc_clock/(4096*self._update_rate)) - 1
+
+        self.bus.write_byte_data(self.address, 0x00, 0x10)
+        self.bus.write_byte_data(self.address, 0xfe, int(prescale_value))
+        self.bus.write_byte_data(self.address, 0x00, 0x00)
 
     def _write(self, id, register_value):
 
@@ -45,8 +60,10 @@ class ServoController(object):
         self.bus.write_byte_data(self.address, 0x00, 0x00)
 
     def addServo(self, id, trim):
-        self.servos[id] = Servo(id, trim)
-
+        if id >= 0 and id <= 15:
+            self.servos[id] = Servo(id, trim)
+        else:
+            raise ValueError('Invalid ID')
 
 class Servo(object):
 
