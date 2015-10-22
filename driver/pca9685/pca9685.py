@@ -1,6 +1,6 @@
 class ServoController(object):
 
-    def __init__(self, bus, address, servo_min=1500, servo_max=2000, servo_amp=180):
+    def __init__(self, bus, address, servo_min=700, servo_max=2300, servo_amp=180):
 
         self._osc_clock = 25000000
         self._update_rate = 60
