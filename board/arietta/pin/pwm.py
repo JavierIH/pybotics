@@ -2,7 +2,7 @@ import os
 
 class PWM(object):
 
-    def __init__(self, port, period=0, duty_cycle=0):
+    def __init__(self, port, period=5000000, duty_cycle=0):
         
         self.port = port
         self.path = "/sys/class/pwm/pwmchip0/pwm%s" % self.port
@@ -10,15 +10,15 @@ class PWM(object):
             os.system("echo %s > /sys/class/pwm/pwmchip0/export" % port)
         self.period = period
         self.duty_cycle = duty_cycle
-        self.enable = 1
+        self.enable
+
+    @property
+    def disable(self):
+        self._write("enable", 0)
 
     @property
     def enable(self):
         self._write("enable", 1)
- 
-    @property
-    def disable(self):
-        self._write("enable", 0)
 
     @property
     def status(self):
