@@ -60,10 +60,10 @@ class Digital(object):
             else:
                 raise PinException()
 
-    def _read(self):
+    def read(self):
         with open(self.path, 'r') as f:
             return f.read()
 
-    def _write(self, value):
+    def write(self, value):
         with open(self.path, 'w+') as f:
             f.write(str(value))
