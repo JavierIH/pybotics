@@ -9,15 +9,15 @@ class Inclinometer(object):
         self.bus = bus
 
         # configuration
-        self.bus.write_byte_data(self.address, 0x3d, 0x00) #configuration mode
-        self.bus.write_byte_data(self.address, 0x3f, 0x20) #reset
+        self.bus.write_byte_data(self.address, 0x3d, 0x00)  # configuration mode
+        self.bus.write_byte_data(self.address, 0x3f, 0x20)  # reset
         time.sleep(0.1)
         self.waitBus()
-        self.bus.write_byte_data(self.address, 0x3e, 0x00) #power mode normal
+        self.bus.write_byte_data(self.address, 0x3e, 0x00)  # power mode normal
         if self.bus.read_byte_data(self.address, 0x3e) != 0:
             print 'ERROR!'
 
-        self.bus.write_byte_data(self.address, 0x3d, 0x0c) #mode ndof
+        self.bus.write_byte_data(self.address, 0x3d, 0x0c)  # mode ndof
 
         self.roll_trim = 0
         self.pitch_trim = 0
@@ -44,7 +44,7 @@ class Inclinometer(object):
 
     def waitBus(self):
         try:
-            self.bus.read_byte_data(self.address, 0x39) #sys_status
+            self.bus.read_byte_data(self.address, 0x39)  # sys_status
         except IOError:
             print 'waiting...'
             time.sleep(0.5)
