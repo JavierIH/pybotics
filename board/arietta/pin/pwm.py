@@ -31,20 +31,20 @@ class PWM(object):
 
     @period.setter
     def period(self, period):
-        if self.duty_cycle >= period:
-            self._write("period", period)
+        self._write("period", period)
 
     @property
     def duty_cycle(self):
         return self._read("duty_cycle")
 
     @duty_cycle.setter
-    def duty_cycle(self, period):
-        self._write("duty_cycle", period)
+    def duty_cycle(self, duty_cycle):
+        if self.period >= duty_cycle:
+            self._write("duty_cycle", duty_cycle)
 
     def _read(self, data):
         with open(os.path.join(self.path, data), 'r') as f:
-            return f.read()
+            return int(f.read())
 
     def _write(self, data, value):
         with open(os.path.join(self.path, data), 'r+') as f:
